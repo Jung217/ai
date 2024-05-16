@@ -1,6 +1,6 @@
 # 用 Groq Api 的 Line Bot
 
-[line.me/R/ti/p/@928ngtdy](line.me/R/ti/p/@928ngtdy)
+[line.me/R/ti/p/@928ngtdy](https://line.me/R/ti/p/@928ngtdy)
 
 ## 參考
 * 自己之前的 Line Bot : [Jung217/Penguin-cat-assistant](https://github.com/Jung217/Penguin-cat-assistant)
