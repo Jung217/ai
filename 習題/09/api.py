@@ -8,12 +8,14 @@ client = Groq(
 
 chat_completion = client.chat.completions.create(
     messages=[
+        {"role": "system", "content": "用繁體中文回答"},#Translate all answer to Chinese You are a helpful assistant. answer with 繁體中文
         {
             "role": "user",
-            "content": "安排一套台灣的五日，遊用繁體中文回答",
+            "content": "縱浪大化中 不喜亦不懼 解釋",
         }
     ],
     model="llama3-8b-8192",
+    temperature=0.8,
 )
 
 print(chat_completion.choices[0].message.content)
