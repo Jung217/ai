@@ -277,16 +277,53 @@ PS C:\Users\alex2\Desktop\NQU\ai\習題\03> python .\linear.py
 Optimal solution: x = 2.98, y = 4.86, z = 3.03
 Maximum value of the objective function: 33.79
 ```
-### 習題四 : 求解方程式
-> 
+### 習題四
+> 手算反傳遞梯度
+
 ![](https://github.com/Jung217/ai/blob/master/%E7%BF%92%E9%A1%8C/04/268811.jpg)
     
-### 習題五:找任何向量函數的最高點
-> 
+### 習題五
+> 為 micrograd 加上一個梯度下降法函數 gradientDescendent(...)
 
 ```python
+#改自 https://github.com/ccc112b/py2cs/blob/master/03-人工智慧/02-優化算法/02-深度學習優化/03-梯度下降法/gd.py
+import numpy as np
+from numpy.linalg import norm
+from micrograd.engine import Value
+
+p = [0.0, 0.0, 0.0]
+
+def gradientDescendent(f, p0, h=0.01, max_loops=100000, dump_period=1000):
+    p = p0.copy()
+    
+    for i in range(max_loops):
+        gp, t=[], []
+        fp = f(p)
+
+        for j in range(len(p)): t.append(Value(p[j]))
+        f(t).backward()
+
+        for j in t: gp.append(j.grad)
+        glen = norm(gp) 
+
+        if i%dump_period == 0: print('{:05d}:f(p)={:.3f} p={:s} gp={:s} glen={:.5f}'.format(i, fp, str(p), str(gp), glen))
+        if glen < 0.00001: break
+
+        gh = np.multiply(gp, -1*h) 
+        p +=  gh 
+    print('{:05d}:f(p)={:.3f} p={:s} gp={:s} glen={:.5f}'.format(i, fp, str(p), str(gp), glen))
+    return p 
+
+def f(p):
+    [x, y, z] = p
+    return (x-1)**2+(y-2)**2+(z-3)**2
+
+gradientDescendent(f, p)
 ```
 ```
+PS C:\Users\alex2\Desktop\NQU\ai\習題\05> python .\micro.py
+00000:f(p)=14.000 p=[0.0, 0.0, 0.0] gp=[-2.0, -4.0, -6.0] glen=7.48331
+00670:f(p)=0.000 p=[0.99999868 1.99999735 2.99999603] gp=[-2.645457017003139e-06, -5.290914034006278e-06, -7.936371051009417e-06] glen=0.00001
 ```
 ### 習題六
 > 
@@ -310,12 +347,9 @@ Maximum value of the objective function: 33.79
 ```
 ```
 ### 習題九
-> 
+> 請呼叫 LLM 大語言模型 api (groq, openai) 去做一個小應用
 
-```py
-```
-```
-```
+* [Jung217 / groq_line_bot](https://github.com/Jung217/groq_line_bot)
 ### 習題十
 > 
 
@@ -323,3 +357,6 @@ Maximum value of the objective function: 33.79
 ```
 ```
 ```
+### 期中
+* [人工智慧的筆記](https://hackmd.io/@Jung217/nqu_ai)
+* [基於 LSTM & BERT 機器學習之網路輿情分析](https://github.com/Jung217/LSTM_BERT_Sentiment_Analysis)
