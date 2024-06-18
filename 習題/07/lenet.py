@@ -1,3 +1,4 @@
+# 參考 https://github.com/ccc112b/py2cs/blob/master/03-人工智慧/06-強化學習/01-強化學習/01-gym/04-run/cartpole_human_run.py
 import torch.nn as nn
 import torch.nn.functional as F
 
