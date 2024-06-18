@@ -1,4 +1,4 @@
-
+# 參考 https://github.com/ccc112b/py2gpt/blob/master/03b-MacroGrad/mnist.py
 class Value:
     """ stores a single scalar value and its gradient """
 
