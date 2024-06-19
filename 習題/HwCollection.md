@@ -765,12 +765,69 @@ Maximum steps survived: 180
 
 * [Jung217 / groq_line_bot](https://github.com/Jung217/groq_line_bot)
 ### 習題十
-> 
+> 自己設計 RAG 或 ReAct 的程式(可以用 langchain 或 dspy)
 
 ```py
+# 參考 https://github.com/ali1234-56/ai-homework/blob/main/hk10/rag.py
+import os
+import openai
+from langchain import hub
+from langchain.agents import AgentExecutor, create_react_agent
+from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain.chat_models import ChatOpenAI
+
+os.environ["OPENAI_API_KEY"] = ""
+
+openai.api_key = os.environ["OPENAI_API_KEY"]
+
+prompt = hub.pull("hwchase17/react")
+
+llm = ChatOpenAI(model="gpt-3.5-turbo")
+
+tools = [TavilySearchResults(max_results=2)]
+
+agent = create_react_agent(llm, tools, prompt)
+
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+user_input = input("Enter your question: ")
+
+response = agent_executor.invoke({"input": user_input + "，#zh-TW"})
+user_input1 = response['output'] + " 將任何輸入翻譯成繁體中文"
+
+response1 = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": user_input1}
+    ]
+)
+print(response1['choices'][0]['message']['content'])
+
 ```
 ```
+PS C:\Users\alex2\Desktop\NQU\ai\習題\10> python .\rag.py
+C:\Users\alex2\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\site-packages\langchain\chat_models\__init__.py:32: LangChainDeprecationWarning: Importing chat models from langchain is deprecated. Importing from langchain will no longer be supported as of langchain==0.2.0. Please import from langchain-community instead:
+
+`from langchain_community.chat_models import ChatOpenAI`.
+
+To install langchain-community run `pip install -U langchain-community`.
+  warnings.warn(
+C:\Users\alex2\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\site-packages\langchain_core\_api\deprecation.py:139: LangChainDeprecationWarning: The class `ChatOpenAI` was deprecated in LangChain 0.0.10 and will be removed in 0.3.0. An updated version of the class exists in the langchain-openai package and should be used instead. To use it run `pip install -U langchain-openai` and import as `from langchain_openai import ChatOpenAI`.
+  warn_deprecated(
+Enter your question: 台灣總統?
+
+
+> Entering new AgentExecutor chain...
+I should use the search engine to find out who the current president of Taiwan is.
+Action: tavily_search_results_json
+Action Input: Current president of Taiwan[{'url': 'https://en.wikipedia.org/wiki/Tsai_Ing-wen', 'content': 'On 9 August 2020, the United States Health and Human Services Secretary Alex Azar of the Trump administration became the highest-level Cabinet member to visit Taiwan since the diplomatic break between the ROC and the United States in 1979.[93]\nIn April 2021, the United States ambassador to Palau made an official visit to Taiwan, the first time a US ambassador had done so since the US switched recognition from the ROC to the PRC in 1979.[94]\nIn the same month, the United States President Joe Biden also sent an official delegation including former senator Chris Dodd to Taiwan.[95]\nOn November 3, 2021 the first official European Union delegation arrived in Taiwan led by French MEP Raphael Glucksmann, and consisting of Lithuanian MEPs Andrius Kubilius and Petras Auštrevičius, Czech MEP Markéta Gregorová, Austrian MEP Andreas Schieder, Greek MEP Georgios Kyrtsos and Italian MEP Marco Dreosto, with the purpose of conducting exchanges on disinformation and cyber attacks against democracies.[96][97]\nThe visit followed an official tour of Central Europe by foreign minister Joseph Wu which included an unofficial visit to Brussels.[98][99]\nOn August 2, 2022, U.S. House speaker Nancy Pelosi visited Taiwan with a delegation of 6\nDemocratic representatives, the first since a visit by Newt Gingrich in 1997, and the highest-profile visit since.\n On 27 April 2011, Tsai became the first female presidential candidate in Taiwan after she defeated former Premier Su Tseng-chang by a small margin in a nationwide phone poll (of more than 15,000 samples) that served as the party\'s primary.[3] Tsai ran against incumbent President Ma Ying-jeou of the Kuomintang and James Soong of the People First Party in the 5th direct presidential election, which was held on 14 January 2012.[57] Garnering 45% of the vote, she conceded defeat to President Ma in an international press conference, resigning her seat as Chairman of the DPP.[58]\n2016[edit]\nOn 15 February 2015, Tsai officially registered for the Democratic Progressive Party\'s presidential nomination primary.[59] Though Lai Ching-te and Su Tseng-chang were seen as likely opponents,[60] Tsai was the only candidate to run in the primary and the DPP officially nominated her as the presidential candidate on 15 April.[61][62]\n The Central Epidemic Command Center was activated on January 20, 2020, and deactivated May 1, 2023.[106][107]\nTrade relations[edit]\nOn August 28, 2020, the Tsai administration lifted a ban on leaning agent ractopamine, clearing the way for U.S. pork imports and removing a major hurdle for bilateral trade talks between Taiwan and the United States.[108]\nThis move proved controversial domestically, and a referendum to reinstate the ban was defeated in 2021.[109]\nOn June 1, 2022, Taiwan established a trade negotiation framework titled the U.S.-Taiwan Initiative on 21st-Century Trade.[110]\nOn June 1, 2023, an initial trade agreement was signed with the United States on June 1, 2023 under this framework, which streamlined customs regulations, established common regulatory practices, and introduced anti-corruption measures,[111][112] with further measures still in discussion.[113]\nEnergy policy[edit]\nThe Tsai administration has stated an electricity supply goal of 20% from renewables, 30% from coal and 50% from liquefied natural gas by 2025.[114]\nBills under the umbrella of the Forward-Looking Infrastructure initiative have been used to fund green energy initiatives.\n The Act Governing the Handling of Ill-gotten Properties by Political Parties and Their Affiliate Organizations was passed in July and Wellington Koo, one of the main authors of the Act, was named as the committee chairman in August.[183][184]\nThe stated goal of the act is to investigate state assets which were illegally transferred to private political parties and affiliates during the martial law era, and therefore applies only to political parties officially formed before the end of martial law.[185]\nThis effectively limits its scope to the KMT, which has insisted that it has been illegally and unconstitutionally persecuted and that the investigation is a political witch hunt.[186][187] She generally supports the diversification of Taiwan\'s economic partners.[204][205]\nIn response to the death of Chinese Nobel Peace Prize laureate Liu Xiaobo, who died of organ failure while in government custody, Tsai pleaded with the Communist government to "show confidence in engaging in political reform so that the Chinese can enjoy the God-given rights of freedom and democracy".[206]\nTsai has accused the Communist Party of China\'s troll army of spreading fake news via social media to influence voters and support candidates more sympathetic to Beijing ahead of the 2018 Taiwanese local elections.[207][208][209]\nIn January 2019, Xi Jinping, General Secretary of the Chinese Communist Party (CCP), had announced an open letter to Taiwan proposing a one country, two systems formula for eventual unification.'}, {'url': 'https://apnews.com/article/taiwan-president-lai-chingte-af4ff1f254e11c24f751cea000fb42d9', 'content': "10 of 19 |. In this photo released by the Taipei News Photographer, President-elect Lai Ching-te, also known by his English name William, gets sworn in as Taiwan's new president during his inauguration ceremony in Taipei, Taiwan, Monday, May 20, 2024. Lai was sworn in as Taiwan's new president Monday, beginning a term in which he is ..."}]I now know the final answer
+Final Answer: The current president of Taiwan is Lai Ching-te.
+
+> Finished chain.
+台灣目前的總統是賴清德。
 ```
 ### 期中
 * [人工智慧的筆記](https://hackmd.io/@Jung217/nqu_ai)
 * [基於 LSTM & BERT 機器學習之網路輿情分析](https://github.com/Jung217/LSTM_BERT_Sentiment_Analysis)
+* [Jung217 / openai_agent_linebot](https://github.com/Jung217/openai_agent_linebot)
